@@ -1,0 +1,910 @@
+C:\Users\chaitanya\Documents\Unified Functional Testing
+==========================================================================================
+ALM Server URL :
+
+http://almserver:8080/qcbin/
+
+=============================================================================================
+Descriptive Programming
+
+	SystemUtil.Run "http://192.168.1.4/hms/login.aspx"
+
+Browser("name:=Untitled Page").Page("title:=Untitled Page").Webedit("name:=txtUserName").Set "mindq"
+Browser("name:=Untitled Page").Page("title:=Untitled Page").Webedit("name:=txtPwd").Set "mindq"
+Browser("name:=Untitled Page").Page("title:=Untitled Page").webbutton("name:=Sign In").Click
+
+wait(15)
+
+Browser("name:=HOSPITAL MANAGEMENT SYSTEM").Page("title:=HOSPITAL MANAGEMENT SYSTEM").Frame("name:=left").Image("alt:=Expand Registration").Click
+Browser("name:=HOSPITAL MANAGEMENT SYSTEM").Page("title:=HOSPITAL MANAGEMENT SYSTEM").Frame("name:=left").Link("name:=Patient Registration").Click
+Browser("name:=HOSPITAL MANAGEMENT SYSTEM").Page("title:=HOSPITAL MANAGEMENT SYSTEM").Frame("name:=display").Image("alt:=hypNew").Click
+
+wait(5)
+
+Browser("name:=HOSPITAL MANAGEMENT SYSTEM").Page("title:=HOSPITAL MANAGEMENT SYSTEM").Frame("name:=display").Webedit("name:=txtName").set "chaitupo"
+Browser("name:=HOSPITAL MANAGEMENT SYSTEM").Page("title:=HOSPITAL MANAGEMENT SYSTEM").Frame("name:=display").Webedit("name:=txtAge").Set "28"
+Browser("name:=HOSPITAL MANAGEMENT SYSTEM").Page("title:=HOSPITAL MANAGEMENT SYSTEM").Frame("name:=display").WebList("name:=ddlSex").Select "MALE"
+Browser("name:=HOSPITAL MANAGEMENT SYSTEM").Page("title:=HOSPITAL MANAGEMENT SYSTEM").Frame("name:=display").Webedit("name:=txtMobile").Set "9876543023"
+Browser("name:=HOSPITAL MANAGEMENT SYSTEM").Page("title:=HOSPITAL MANAGEMENT SYSTEM").Frame("name:=display").Webedit("name:=txtAddress1").Set "Nizampet"
+Browser("name:=HOSPITAL MANAGEMENT SYSTEM").Page("title:=HOSPITAL MANAGEMENT SYSTEM").Frame("name:=display").WebList("name:=ddlaspState").Select "AP"
+Browser("name:=HOSPITAL MANAGEMENT SYSTEM").Page("title:=HOSPITAL MANAGEMENT SYSTEM").Frame("name:=display").Webedit("name:=txtDoctorName").Set "xyzertu"
+
+
+
+Browser("name:=HOSPITAL MANAGEMENT SYSTEM").Page("title:=HOSPITAL MANAGEMENT SYSTEM").Frame("name:=display").webButton("name:=Submit").Click
+
+=============================================================================================================================================================
+C:\Users\chaitanya\Documents\Unified Functional Testing
+C:\Users\nagalakshmi\Documents\Unified Functional Testing
+--------------------------------------------------------------------------
+
+File System Object
+
+Dim fso
+
+Set fso=CreateObject("scripting.filesystemobject")
+fso.CreateFolder "X:\3.	Test_data"
+
+===============================================================================================================
+
+
+Date : 08/04/2017
+
+Function Library
+
+Class browser_class
+	Dim ie,url
+	Function br_open(url)
+		Set ie=createobject("internetexplorer.application")
+		ie.Visible=true
+		ie.Navigate url
+		br_open="browser is opened"
+	End Function
+	Function br_close()	
+		ie.Quit
+		br_close="browser is closed"
+	End Function
+	
+End Class
+
+==================================================================================================================
+
+Associate function library in Action
+
+executefile "C:\Users\chaitanya\Documents\Unified Functional Testing\browser functions.qfl"
+Set g=new browser_class
+g.br_open("http://192.168.1.4/hms")
+wait(2)
+g.br_close()
+
+==============================================================================================================
+// LOg Files
+
+Function Library
+
+Class log_class
+	Dim fso,fo
+	
+	Function log_open(fpath)
+		
+		Set fso=CreateObject("scripting.filesystemobject")
+		Set fo=fso.OpenTextFile(fpath,8,true)
+		log_open="text file opened"
+	End Function
+		Function log_write(line)
+			s=now &" " &line
+			fo.WriteLine(s)
+				log_write="some text has inserted"
+	End Function
+	
+	Function log_blank()
+		
+		fo.WriteBlankLines(2)
+		lob_blank="2 blank spaces are inserted"
+		
+	End Function
+	
+	Function log_close()
+		
+			fo.Close
+			log_close="text file closed"
+			Set fso=nothing
+			Set fo=nothing
+	End Function
+	End Class
+	
+
+--------------------------------------------------------------------------------
+
+Action :
+
+executefile "C:\Users\chaitanya\Documents\Unified Functional Testing\Text file operation.qfl"
+
+Set b=new log_class
+	b.log_open "X:\Log _files\xyz.txt"
+
+b.log_write("hello..")
+b.log_blank()
+
+========================================================================================================================
+
+Today scripts (11-04-2017)http://192.168.1.4/hms/login.aspx
+
+----------------------------------
+
+HMS_Functions
+
+Class HMS_class
+	
+	Function  login_we(br,we,x)
+		If browser("name:="&br).page("title:="&br).webedit("name:="&we).exist Then
+		browser("name:="&br).page("title:="&br).webedit("name:="&we).set x
+		result="value is entered"
+		reporter.reportevent micpass,result,login_we
+         else
+         reporter.reportevent micfail,"value is not entered",login_we
+         End if
+         End function
+         
+         Fuinction login_wb(br,wb)
+         If browser("name:="&br).page("title:="&br).webbutton("name:="&wb).exist Then
+            browser("name:="&br).page("title:="&br).webbutton("name:="&wb).click
+            result="button is clicked"
+            reporter.ReportEvent micPass,result,login_wb
+            else
+            reporter.ReportEvent micfail,"button is not clicked",login_wb
+                 	
+          End If
+           Function hms_image(br,fr,im)
+	          If browser("name:="&br).page("title:="&br).Frame("name:="&fr).image("alt:="&im).exist Then
+	          browser("name:="&br).page("title:="&br).Frame("name:="&fr).image("alt:="&im).click
+	          result="image is clicked"
+	          reporter.ReportEvent micPass,result,hms_image
+            else
+            reporter.ReportEvent micfail,"image is not clicked",hms_image
+	                   	
+	          End If
+	               	
+          End Function
+          
+          Function hms_link(br,fr,lk)
+          	If browser("name:="&br).page("title:="&br).Frame("name:="&fr).link("name:="&lk).exist then
+          	   browser("name:="&br).page("title:="&br).Frame("name:="&fr).link("name:="&lk).click
+          	   result="button is clicked"
+	          reporter.ReportEvent micPass,result,hms_link
+            else
+            reporter.ReportEvent micfail,"button is not clicked",hms_link
+          		
+          		
+          	End If
+          End Function
+          
+          Function  hms_we(br,fr,we,v)
+       if   browser("name:="&br).page("title:="&br).Frame("name:="&fr).webedit("name:="&we).exist then
+            browser("name:="&br).page("title:="&br).Frame("name:="&fr).webedit("name:="&we).set v
+            result="value is entered"
+	          reporter.ReportEvent micPass,result,hms_we
+            else
+            reporter.ReportEvent micfail,"value is not entered",hms_we
+          		
+          End if
+               	
+          End Function
+          
+          Function hms_wb(br,fr,wb)
+          	If browser("name:="&br).page("title:="&br).Frame("name:="&fr).webbutton("name:="&wb).exist Then
+          	    browser("name:="&br).page("title:="&br).Frame("name:="&fr).webbutton("name:="&wb).click
+          	    result="button is clicked"
+	          reporter.ReportEvent micPass,result,hms_wb
+            else
+            reporter.ReportEvent micfail,"button is not clicked",hms_wb
+	          	         		
+          	End If
+          End Function   
+
+
+Function dr_selection(dn)
+	browser("name:=HOSPITAL MANAGEMENT SYSTEM").page("title:=HOSPITAL MANAGEMENT SYSTEM").frame("name:=display").webedit("name:=txtDoctorName").Click
+	Set h=createobject("mercury.devicereplay")
+	h.PressKey 60
+rc=browser("name:=Doctor Details").page("title:=Doctor Details").webtable("html id:=gvDoctorCode").RowCount
+For i = 1 To rc Step 1
+	cn=browser("name:=Doctor Details").page("title:=Doctor Details").webtable("html id:=gvDoctorCode").GetCellData(i,2)
+	If cn=dn Then
+		browser("name:=Doctor Details").page("title:=Doctor Details").webtable("html id:=gvDoctorCode").ChildItem(i,1,"link",0).click
+		browser("name:=Doctor Details").page("title:=Doctor Details").webbutton("name:=Ok").Click
+		Exit for
+	End If
+	
+Next
+End Function
+          End Class
+          
+          
+          
+        
+==========================================================================================================================               ===========================================================================================================================
+
+
+Action
+=============
+
+ExecuteFile "C:\Users\chaitanya\Documents\Unified Functional Testing\HMS_Functions.qfl"
+
+Set y=new HMS_class
+y.login_we "Untitled Page","txtUserName","mindq"
+y.login_we "Untitled Page","txtPwd","mindq" 
+y.login_wb "Untitled Page","webbutton","Sign In"
+
+y.hms_image "HOSPITAL MANAGEMENT SYSTEM","Expand Reception"
+y.dr_selection("Asha")
+
+======================================================================================================================
+Function Library path :
+
+C:\Users\chaitanya\Documents\Unified Functional Testing
+
+Action Path :
+
+C:\Users\chaitanya\Documents\Unified Functional Testing
+
+======================================================================================================================
+
+
+Function Decomposition (Function Library)
+
+===============================================
+
+Class HMS_class
+	
+	Function  login_we(br,we,x)
+		If browser("name:="&br).page("title:="&br).webedit("name:="&we).exist Then
+		   browser("name:="&br).page("title:="&br).webedit("name:="&we).set x
+		   result="value is entered"
+		   reporter.reportevent micpass,result,login_we
+           else
+           reporter.reportevent micfail,"value is not entered",login_we
+         End if
+     End function
+         
+    Function login_wb(br,wb)
+         If browser("name:="&br).page("title:="&br).webbutton("name:="&wb).exist Then
+            browser("name:="&br).page("title:="&br).webbutton("name:="&wb).click
+            result="button is clicked"
+            reporter.ReportEvent micPass,result,login_wb
+            else
+            reporter.ReportEvent micfail,"button is not clicked",login_wb
+            End If            	
+       End Function
+    Function hms_image(br,fr,im)
+	          If browser("name:="&br).page("title:="&br).Frame("name:="&fr).image("alt:="&im).exist Then
+	          browser("name:="&br).page("title:="&br).Frame("name:="&fr).image("alt:="&im).click
+	          result="image is clicked"
+	          reporter.ReportEvent micPass,result,hms_image
+            else
+            reporter.ReportEvent micfail,"image is not clicked",hms_image
+	       End If	               	
+     End Function
+          
+     Function hms_link(br,fr,lk)
+          	If browser("name:="&br).page("title:="&br).Frame("name:="&fr).link("name:="&lk).exist then
+          	   browser("name:="&br).page("title:="&br).Frame("name:="&fr).link("name:="&lk).click
+          	   result="button is clicked"
+	          reporter.ReportEvent micPass,result,hms_link
+              else
+              reporter.ReportEvent micfail,"button is not clicked",hms_link         		
+          	End If
+       End Function
+          
+          Function  hms_we(br,fr,we,v)
+       if   browser("name:="&br).page("title:="&br).Frame("name:="&fr).webedit("name:="&we).exist then
+            browser("name:="&br).page("title:="&br).Frame("name:="&fr).webedit("name:="&we).set v
+            result="value is entered"
+	          reporter.ReportEvent micPass,result,hms_we
+            else
+            reporter.ReportEvent micfail,"value is not entered",hms_we
+          		
+          End if
+               	
+          End Function
+          
+          Function hms_wb(br,fr,wb)
+          	If browser("name:="&br).page("title:="&br).Frame("name:="&fr).webbutton("name:="&wb).exist Then
+          	    browser("name:="&br).page("title:="&br).Frame("name:="&fr).webbutton("name:="&wb).click
+          	    result="button is clicked"
+	          reporter.ReportEvent micPass,result,hms_wb
+            else
+            reporter.ReportEvent micfail,"button is not clicked",hms_wb
+	          	         		
+          	End If
+          End Function   
+
+
+       Function hms_wl(br,fr,wl,v)
+       
+       If browser("name:="&br).page("title:="&br).Frame("name:="&fr).weblist("name:="&wl).exist Then
+          	    browser("name:="&br).page("title:="&br).Frame("name:="&fr).weblist("name:="&wl).select v
+          	    result="weblist is selectesd"
+	          reporter.ReportEvent micPass,result,hms_wl
+            else
+            reporter.ReportEvent micfail,"weblist is not selected"
+	          	         		
+          	End If
+          End Function   
+
+       	
+     
+
+Function dr_selection(dn)
+	browser("name:=HOSPITAL MANAGEMENT SYSTEM").page("title:=HOSPITAL MANAGEMENT SYSTEM").frame("name:=display").webedit("name:=txtDoctorName").Click
+	Set h=createobject("mercury.devicereplay")
+	h.PressKey 60
+rc=browser("name:=Doctor Details").page("title:=Doctor Details").webtable("html id:=gvDoctorCode").RowCount
+For i = 1 To rc Step 1
+	cn=browser("name:=Doctor Details").page("title:=Doctor Details").webtable("html id:=gvDoctorCode").GetCellData(i,2)
+	If cn=dn Then
+		browser("name:=Doctor Details").page("title:=Doctor Details").webtable("html id:=gvDoctorCode").ChildItem(i,1,"link",0).click
+		browser("name:=Doctor Details").page("title:=Doctor Details").webbutton("name:=Ok").Click
+		Exit for
+	End If
+	
+Next
+End Function
+          End Class
+          
+          
+          
+        ================================================================================================================
+
+Action for function decomposition :
+--------------------------------------
+
+ExecuteFile "C:\Users\chaitanya\Documents\Unified Functional Testing\HMS_Functions.qfl"
+
+Set y=new HMS_class
+
+y.login_we "Untitled Page","txtUserName","mindq"
+
+y.login_we "Untitled Page","txtPwd","mindq" 
+
+y.login_wb "Untitled Page","Sign In"
+'
+y.hms_image "HOSPITAL MANAGEMENT SYSTEM","left","Expand Reception"
+
+y.hms_image "HOSPITAL MANAGEMENT SYSTEM","left","Expand Registration"
+
+y.hms_link "HOSPITAL MANAGEMENT SYSTEM","left","Patient Registration"
+
+y.hms_image "HOSPITAL MANAGEMENT SYSTEM","display","hypNew"
+
+y.hms_we "HOSPITAL MANAGEMENT SYSTEM","display","txtName","chaitu"
+
+y.hms_we "HOSPITAL MANAGEMENT SYSTEM","display","txtAge","30"
+
+y.hms_we "HOSPITAL MANAGEMENT SYSTEM","display","txtMobile","9887560243"
+'
+y.hms_we "HOSPITAL MANAGEMENT SYSTEM","display","txtAddress1","sr nagar"
+
+y.hms_we "HOSPITAL MANAGEMENT SYSTEM","display","txtDoctorName","Asha"
+
+y.hms_wl "HOSPITAL MANAGEMENT SYSTEM","display","ddlSex","MALE"
+'
+'
+y.hms_wl "HOSPITAL MANAGEMENT SYSTEM","display","ddlaspState","AP"
+
+y.hms_wb "HOSPITAL MANAGEMENT SYSTEM","display","Submit"
+
+'y.dr_selection("Asha")
+
+=====================================================================================================================================
+
+'//browser functions
+
+Class browser_class
+	Dim ie,url
+	Function br_open(url)
+	Set ie=createobject("internetexplorer.application")
+	ie.Visible=true
+	ie.Navigate url
+	br_open="browser is opened"
+						
+	End Function
+	
+		Function br_close()
+		ie.Quit
+			br_close="browser is closed"
+	End Function
+	
+End Class
+
+===============================================================================================================
+//Action sheet for Browser functions
+
+executefile "C:\Users\chaitanya\Documents\Unified Functional Testing\Text file operation.qfl"
+
+Set b=new log_class
+	b.log_open "X:\Log _files\xyz.txt"
+
+b.log_write("hello..")
+b.log_blank()
+
+==========================================================================================================================
+
+//Log functions
+
+Class log_class
+	Dim fso,fo
+	
+	Function log_open(fpath)
+		
+		Set fso=CreateObject("scripting.filesystemobject")
+		Set fo=fso.OpenTextFile(fpath,8,true)
+		log_open="text file opened"
+	End Function
+		Function log_write(line)
+			s=now &" " &line
+			fo.WriteLine(s)
+				log_write="some text has inserted"
+	End Function
+	
+	Function log_blank()
+		
+		fo.WriteBlankLines(2)
+		lob_blank="2 blank spaces are inserted"
+		
+	End Function
+	
+	Function log_close()
+		
+			fo.Close
+			log_close="text file closed"
+			Set fso=nothing
+			Set fo=nothing
+	End Function
+	End Class
+===========================================================================================================================
+
+'data driven frame work
+
+Dim br(3),fr(3),we(15),wl(8),wb(5),link(35),img(5),wt(2),pr(15,15),login(3),xl
+Set xl=createobject("excel.application")
+xl.Workbooks.Open"X:\QTP-Proj\D7-VarFile_from_XLFile\HMS_TestData.xls"
+'xl.Visible=true
+
+'Browser Sheet
+
+rc_br=xl.Worksheets("Browser").usedrange.rows.count
+print rc_br
+For i = 1 To rc_br Step 1
+br(i)=xl.Worksheets("Browser").cells(i,1)
+	print br(i)
+Next
+
+'Frame sheet
+rc_fr=xl.Worksheets("Frame").usedrange.rows.count
+print rc_fr
+For i= 1  To rc_fr step 1
+	fr(i)=xl.Worksheets("Frame").cells(i,1)
+	print fr(i)
+Next
+
+'WebEdit sheet
+
+rc_we=xl.Worksheets("WebEdit").usedrange.rows.count
+print rc_we
+For i= 1 To rc_we Step 1
+we(i)=xl.Worksheets("WebEdit").cells(i,1)
+print we(i)
+	
+Next
+
+'WebButton sheet
+
+rc_wb=xl.Worksheets("WebButton").usedrange.rows.count
+print rc_wb
+for i=1 to rc_wb step 1
+wb(i)=xl.Worksheets("WebButton").cells(i,1)
+print wb(i)
+next
+
+'WebList sheet
+
+rc_wl=xl.Worksheets("WebList").usedrange.rows.count
+print rc_wl
+For i = 1 To rc_wl Step 1
+	wl(i)=xl.Worksheets("WebList").cells(i,1)
+	print wl(i)
+Next
+
+'Link sheet
+
+rc_link=xl.Worksheets("Link").usedrange.rows.count
+print rc_link
+For i=1 to rc_link step 1
+	link(i)=xl.Worksheets("Link").cells(i,1)
+	print link(i)
+Next
+
+'Image sheet
+
+rc_img=xl.Worksheets("Image").usedrange.rows.count
+print rc_img
+For i = 1 To rc_img Step 1
+	img(i)=xl.Worksheets("Image").cells(i,1)
+	print img(i)
+	Next
+
+'WebTable sheet
+
+rc_wt=xl.Worksheets("WebTable").usedrange.rows.count
+print rc_wt
+For i = 1 To rc_wt Step 1
+wt(i) =xl.Worksheets("WebTable").cells(i,1)
+print wt(i)
+
+Next
+
+'Patient_Registration sheet
+rc_pr=xl.Worksheets("Patient_Registration").usedrange.rows.count
+print rc_pr
+cc_pr=xl.Worksheets("Patient_Registration").usedrange.columns.count
+For i = 1 To rc_pr Step 1
+		For j= 1 To cc_pr Step 1
+		pr(i,j) =xl.Worksheets("Patient_Registration").cells(i,j)
+		print pr(i,j)
+	Next
+Next
+
+
+'LOGIN sheet
+
+rc_login=xl.Worksheets("LOGIN").usedrange.rows.count
+print rc_login
+For i=1 to rc_login   Step 1
+login(i)=xl.Worksheets("LOGIN").cells(i,1)
+print login(i)
+	
+Next
+
+=======================================================================================================================
+ //Data driven action sheet
+
+Executefile "C:\Users\chaitanya\Documents\Unified Functional Testing\Array DATA.qfl"
+
+=======================================================================================================================
+
+'//Final driver script
+
+executefile"C:\Users\chaitanya\Documents\Unified Functional Testing\browser functions.qfl"
+executefile"C:\Users\chaitanya\Documents\Unified Functional Testing\Text file operation.qfl"
+executefile"C:\Users\chaitanya\Documents\Unified Functional Testing\HMS_Functions.qfl"
+executefile"C:\Users\chaitanya\Documents\Unified Functional Testing\Array DATA.qfl"
+Dim b,lg,h
+Set b=new browser_class
+Set lg=new log_class
+Set h=new HMS_class
+
+r=b.br_open("http://192.168.1.4/hms")
+lg.log_open("X:\Log _files\logevent.txt")
+lg.log_write(r)
+h.login_we br(1),we(1),login(1)
+h.login_we br(1),we(2),login(2)
+h.login_wb br(1),wb(1)
+For k = 2 To rc_pr-1 Step 1
+
+h.hms_link br(2),fr(1),link(5)
+h.hms_image br(2),fr(2),img(1)
+
+h.hms_we br(2),fr(2),we(4),pr(k,1)
+h.hms_we br(2),fr(2),we(5),pr(k,2)
+h.hms_we br(2),fr(2),we(8),pr(k,6)
+h.hms_we br(2),fr(2),we(9),pr(k,7)
+h.hms_we br(2),fr(2),we(12),pr(k,13)
+
+h.hms_wl br(2),fr(2),wl(1),pr(k,3)
+h.hms_wl br(2),fr(2),wl(3),pr(k,11)
+
+h.hms_wb br(2),fr(2),wb(2)	
+Next
+
+=======================================================================================================================
+               
+'//browser functions
+
+Class browser_class
+	Dim ie,url
+	Function br_open(url)
+	Set ie=createobject("internetexplorer.application")
+	ie.Visible=true
+	ie.Navigate url
+	br_open="browser is opened"
+						
+		End Function
+	
+		Function br_close()
+		ie.Quit
+			br_close="browser is closed"
+	End Function
+	
+End Class
+
+-------------------------------------------------------------------
+// Text file operations
+
+Class log_class
+	Dim fso,fo
+	
+	Function log_open(fpath)
+		
+		Set fso=CreateObject("scripting.filesystemobject")
+		Set fo=fso.OpenTextFile(fpath,8,true)
+		log_open="text file opened"
+	End Function
+		Function log_write(line)
+			s=now &" " &line
+			fo.WriteLine(s)
+				log_write="some text has inserted"
+	End Function
+	
+	Function log_blank()
+		
+		fo.WriteBlankLines(2)
+		lob_blank="2 blank spaces are inserted"
+		
+	End Function
+	
+	Function log_close()
+		
+			fo.Close
+			log_close="text file closed"
+			Set fso=nothing
+			Set fo=nothing
+	End Function
+	End Class
+====================================================================================
+//Array data
+
+//data driven frame work
+
+Dim br(3),fr(3),we(15),wl(8),wb(5),link(35),img(5),wt(2),pr(15,15),login(3),xl
+Set xl=createobject("excel.application")
+xl.Workbooks.Open"X:\QTP-Proj\D7-VarFile_from_XLFile\HMS_TestData.xls"
+'xl.Visible=true
+
+'Browser Sheet
+
+rc_br=xl.Worksheets("Browser").usedrange.rows.count
+print rc_br
+For i = 1 To rc_br Step 1
+br(i)=xl.Worksheets("Browser").cells(i,1)
+	print br(i)
+Next
+
+'Frame sheet
+rc_fr=xl.Worksheets("Frame").usedrange.rows.count
+print rc_fr
+For i= 1  To rc_fr step 1
+	fr(i)=xl.Worksheets("Frame").cells(i,1)
+	print fr(i)
+Next
+
+'WebEdit sheet
+
+rc_we=xl.Worksheets("WebEdit").usedrange.rows.count
+print rc_we
+For i= 1 To rc_we Step 1
+we(i)=xl.Worksheets("WebEdit").cells(i,1)
+print we(i)
+	
+Next
+
+'WebButton sheet
+
+rc_wb=xl.Worksheets("WebButton").usedrange.rows.count
+print rc_wb
+for i=1 to rc_wb step 1
+wb(i)=xl.Worksheets("WebButton").cells(i,1)
+print wb(i)
+next
+
+'WebList sheet
+
+rc_wl=xl.Worksheets("WebList").usedrange.rows.count
+print rc_wl
+For i = 1 To rc_wl Step 1
+	wl(i)=xl.Worksheets("WebList").cells(i,1)
+	print wl(i)
+Next
+
+'Link sheet
+
+rc_link=xl.Worksheets("Link").usedrange.rows.count
+print rc_link
+For i=1 to rc_link step 1
+	link(i)=xl.Worksheets("Link").cells(i,1)
+	print link(i)
+Next
+
+'Image sheet
+
+rc_img=xl.Worksheets("Image").usedrange.rows.count
+print rc_img
+For i = 1 To rc_img Step 1
+	img(i)=xl.Worksheets("Image").cells(i,1)
+	print img(i)
+	Next
+
+'WebTable sheet
+
+rc_wt=xl.Worksheets("WebTable").usedrange.rows.count
+print rc_wt
+For i = 1 To rc_wt Step 1
+wt(i) =xl.Worksheets("WebTable").cells(i,1)
+print wt(i)
+
+Next
+
+'Patient_Registration sheet
+rc_pr=xl.Worksheets("Patient_Registration").usedrange.rows.count
+print rc_pr
+cc_pr=xl.Worksheets("Patient_Registration").usedrange.columns.count
+For i = 1 To rc_pr Step 1
+		For j= 1 To cc_pr Step 1
+		pr(i,j) =xl.Worksheets("Patient_Registration").cells(i,j)
+		print pr(i,j)
+	Next
+Next
+
+
+'LOGIN sheet
+
+rc_login=xl.Worksheets("LOGIN").usedrange.rows.count
+print rc_login
+For i=1 to rc_login   Step 1
+login(i)=xl.Worksheets("LOGIN").cells(i,1)
+print login(i)
+	
+Next
+
+=========================================================================================================================
+
+'//through environment variable
+
+Environment.LoadFromFile "X:\Environme.xml"
+executefile environment.Value("HMS_PATH")
+executefile environment.Value("VAR_PATH")
+
+Set FF= new HMS_class
+FF.login_we br1,we1,uname
+FF.login_we br1,we2,upwd
+FF.login_wb br1,wb1
+FF.hms_link br2,fr1,lnk
+FF.hms_image br2,fr2,img1
+FF.hms_we br2,fr2,we3,"Chaitanya"
+FF.hms_we br2,fr2,we4,"38"
+FF.hms_we br2,fr2,we5,"2255885544"
+FF.hms_we br2,fr2,we6,"chandanagar"
+FF.hms_wl br2,fr2,wblst1,"FEMALE"
+FF.hms_wl br2,fr2,wblst2,"AP"
+FF.dr_selection "Asha"
+FF.hms_wb br2,fr2,wb2
+
+=================================================================================================================
+Environment variables
+
+<Environment>
+
+<Variable>
+<Name>un</Name>
+<Value>mindq</Value>
+</Variable>
+
+<Variable>
+<Name>pwd</Name>
+<Value>mindq</Value>
+</Variable>
+
+<Variable>
+<Name>URL</Name>
+<Value>http://192.168.1.4/hms/login.aspx</Value>
+</Variable>
+
+
+<Variable>
+<Name>BR_PATH</Name>
+<Value>C:\Users\chaitanya\Documents\Unified Functional Testing\browser functions.qfl</Value>
+</Variable>
+
+<Variable>
+<Name>LOG_PATH</Name>
+<Value>C:\Users\chaitanya\Documents\Unified Functional Testing\Text file operation.qfl</Value>
+</Variable>
+
+<Variable>
+<Name>HMS_PATH</Name>
+<Value>C:\Users\chaitanya\Documents\Unified Functional Testing\HMS_Functions.qfl</Value>
+</Variable>
+
+<Variable>
+<Name>ARRY_PATH</Name>
+<Value>C:\Users\chaitanya\Documents\Unified Functional Testing\Array DATA.qfl</Value>
+</Variable>
+
+<Variable>
+<Name>VAR_PATH</Name>
+<Value>X:\flat.vbs</Value>
+</Variable>
+
+</Environment>
+=====================================================================================================================
+// Through flat file
+
+//this is a .vbs file
+
+br1="Untitled Page"
+br2="HOSPITAL MANAGEMENT SYSTEM"
+we1="txtUserName"
+we2="txtPwd"
+wb1="Sign In"
+
+fr1="left"
+fr2="display"
+lnk="Patient Registration"
+img1="hypNew"
+we3="txtName"
+we4="txtAge"
+wblst1="ddlSex"
+we5="txtMobile"
+we6="txtAddress1"
+wblst2="ddlaspState"
+we7="txtDoctorName"
+wb2="Submit"
+uname="mindq"
+upwd="mindq"
+
+
+=======================================================================================================================
+
+Recovery Scenario
+======================
+
+Function recovery()
+	 browser("name:=Untitled Page").page("title:=Untitled Page").webedit("name:=txtUserName").set ""
+'	 browser("name:=Untitled Page").page("title:=Untitled Page").webedit("name:=txtPwd").set ""
+	 browser("name:=Untitled Page").page("title:=Untitled Page").webbutton("name:=Sign In").Click
+	 
+	 If Browser("name:=Untitled Page").Dialog("regexpwndtitle:=Message from webpage").Exist Then
+	    Browser("name:=Untitled Page").Dialog("regexpwndtitle:=Message from webpage").Winbutton("Class Name:=WinButton").Click
+	    
+	    browser("name:=Untitled Page").page("title:=Untitled Page").webedit("name:=txtUserName").set "mindq"
+	    browser("name:=Untitled Page").page("title:=Untitled Page").webedit("name:=txtPwd").set "mindq"
+	    browser("name:=Untitled Page").page("title:=Untitled Page").webbutton("name:=Sign In").Click
+	   
+	   	
+	 	
+	 End If
+	 
+	 
+End Function
+===========================================================================================================================
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
